@@ -7,5 +7,5 @@
   "cpu": ["x64"],
   "files": ["bin/premier", "README.md", "LICENSE"],
   "publishConfig": { "access": "public", "provenance": true },
-  "repository": { "type": "git", "url": "git+https://github.com/PremierStudio/agent-trace.git", "directory": "npm/platforms/darwin-x64" }
+  "repository": { "type": "git", "url": "git+https://github.com/PremierStudio/premier.git", "directory": "npm/platforms/darwin-x64" }
 }

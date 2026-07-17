@@ -8,5 +8,5 @@
   "libc": ["glibc"],
   "files": ["bin/premier", "README.md", "LICENSE"],
   "publishConfig": { "access": "public", "provenance": true },
-  "repository": { "type": "git", "url": "git+https://github.com/PremierStudio/agent-trace.git", "directory": "npm/platforms/linux-arm64-gnu" }
+  "repository": { "type": "git", "url": "git+https://github.com/PremierStudio/premier.git", "directory": "npm/platforms/linux-arm64-gnu" }
 }

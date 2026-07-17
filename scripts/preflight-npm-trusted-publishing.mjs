@@ -66,7 +66,7 @@ if (failures.length > 0) {
   }
   process.stderr.write(
     '\nOn npmjs.com, give each package a GitHub Actions trusted publisher for\n' +
-      'PremierStudio/agent-trace, workflow release.yml, environment release,\n' +
+      'PremierStudio/premier, workflow release.yml, environment release,\n' +
       'then re-run this preflight before pushing a release tag.\n',
   );
   process.exit(1);

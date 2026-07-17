@@ -31,7 +31,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PremierStudio/agent-trace.git",
+    "url": "git+https://github.com/PremierStudio/premier.git",
     "directory": "sdk/js"
   },
   "homepage": "https://premier.dev/docs/sdk"

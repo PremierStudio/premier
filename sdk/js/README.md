@@ -1,6 +1,6 @@
 # @premierstudio/trace
 
-Minimal first-party emitter for [Premier Agent Trace](https://github.com/PremierStudio/agent-trace).
+Minimal first-party emitter for [Premier](https://github.com/PremierStudio/premier) agent traces.
 
 ## Install
 

@@ -68,7 +68,7 @@ an arbitrary URL and works with npm 12's secure install-time defaults.
 Before enabling the public channel, repository administrators must protect the
 `v*` tag namespace, require approval for the `release` environment, and give
 every published package on npmjs.com a GitHub Actions trusted publisher pinned
-to `PremierStudio/agent-trace`, workflow `release.yml`, environment `release`.
+to `PremierStudio/premier`, workflow `release.yml`, environment `release`.
 That link cannot be observed locally, so the release workflow exposes a
 manual preflight: dispatching **Signed release** from the Actions tab runs
 only `verify-npm-trusted-publishing`, which performs the same OIDC token
@@ -101,7 +101,7 @@ The signed archive path below is the Node-free alternative.
 
 Download an archive and its sibling `.sigstore.json` bundle, then install by
 explicit path. The installer verifies the archive against the pinned
-`PremierStudio/agent-trace` release workflow and GitHub Actions OIDC issuer
+`PremierStudio/premier` release workflow and GitHub Actions OIDC issuer
 before extraction:
 
 ```sh
