@@ -1,0 +1,35 @@
+{
+  "name": "agent-trace",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "workspaces": [
+    "apps/viewer",
+    "packages/premier-brand",
+    "packages/premier-theme",
+    "sdk/js"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace @premier/viewer && npm run build --workspace @premierstudio/trace",
+    "check": "npm run check --workspace @premier/viewer && npm run check --workspace @premierstudio/trace && npm run test:launcher",
+    "test:launcher": "node --test \"packages/premier-cli/test/*.test.js\"",
+    "test:rust": "cargo test --workspace",
+    "test:components": "npm run test --workspace @premier/viewer",
+    "test:sdk": "npm run build --workspace @premierstudio/trace && npm run test --workspace @premierstudio/trace",
+    "test:npm-distribution": "node scripts/test-npm-distribution.mjs",
+    "test:coverage": "npm run test:coverage --workspace @premier/viewer",
+    "test:e2e": "npm run build && playwright test",
+    "test:all": "node scripts/check.mjs",
+    "security:secrets": "node scripts/security-scan.mjs",
+    "security:audit": "npm audit --audit-level=low && cargo audit && npm run security:secrets"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.1",
+    "typescript": "5.9.3"
+  },
+  "overrides": {
+    "typescript": "5.9.3"
+  }
+}

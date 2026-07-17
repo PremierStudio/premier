@@ -1,0 +1,14 @@
+{
+  "name": "@premier/theme",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    "./tokens.css": "./tokens.css",
+    "./chrome.css": "./chrome.css"
+  },
+  "files": [
+    "tokens.css",
+    "chrome.css"
+  ]
+}

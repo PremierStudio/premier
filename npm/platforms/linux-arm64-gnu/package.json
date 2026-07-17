@@ -1,0 +1,12 @@
+{
+  "name": "@premierstudio/premier-linux-arm64-gnu",
+  "version": "0.1.0",
+  "description": "Premier native binary for glibc Linux on ARM64",
+  "license": "Apache-2.0",
+  "os": ["linux"],
+  "cpu": ["arm64"],
+  "libc": ["glibc"],
+  "files": ["bin/premier", "README.md", "LICENSE"],
+  "publishConfig": { "access": "public", "provenance": true },
+  "repository": { "type": "git", "url": "git+https://github.com/PremierStudio/agent-trace.git", "directory": "npm/platforms/linux-arm64-gnu" }
+}

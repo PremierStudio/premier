@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+          cache: npm
+      - uses: dtolnay/rust-toolchain@4be7066ada62dd38de10e7b70166bc74ed198c30 # stable
+      - run: npm ci
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium --with-deps
+      - name: Audit JavaScript dependencies
+        run: npm audit --audit-level=low
+      - name: Install RustSec audit tool
+        run: cargo install cargo-audit --locked --version 0.22.2
+      - name: Audit Rust dependencies
+        run: cargo audit
+      - name: Scan tracked files for committed secrets
+        run: npm run security:secrets
+      - run: npm run test:all
+      - run: ./scripts/tests/distribution.sh
+      - run: node scripts/tests/preflight-npm-trusted-publishing.test.mjs

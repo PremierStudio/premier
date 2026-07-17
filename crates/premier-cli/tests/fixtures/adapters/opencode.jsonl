@@ -1,0 +1,2 @@
+{"type":"step_start","session_id":"open-session"}
+{"type":"tool_use","id":"tool-1","name":"read"}

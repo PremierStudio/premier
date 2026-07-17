@@ -1,0 +1,10 @@
+{
+  "name": "@premier/brand",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "simple-icons": "^16.26.0"
+  }
+}

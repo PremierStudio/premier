@@ -1,0 +1,2 @@
+{"type":"init","session_id":"gemini-session"}
+{"type":"tool_result","tool_use_id":"tool-1","name":"read_file","status":"success"}

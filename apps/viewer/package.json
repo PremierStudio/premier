@@ -1,0 +1,37 @@
+{
+  "name": "@premier/viewer",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@fontsource-variable/ibm-plex-sans": "^5.2.8",
+    "@fontsource-variable/source-sans-3": "^5.2.9",
+    "@fontsource/ibm-plex-mono": "5.2.7",
+    "@lucide/svelte": "^1.24.0",
+    "@premier/brand": "*",
+    "@premier/theme": "*",
+    "marked": "^18.0.6",
+    "svelte": "5.56.5"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "7.2.0",
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/svelte": "5.4.2",
+    "@testing-library/user-event": "14.6.1",
+    "@types/node": "26.1.1",
+    "@vitest/coverage-v8": "^4.1.10",
+    "jsdom": "29.1.1",
+    "svelte-check": "4.7.3",
+    "typescript": "5.9.3",
+    "vite": "8.1.4",
+    "vitest": "4.1.10"
+  }
+}

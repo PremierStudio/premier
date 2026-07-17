@@ -1,0 +1,7 @@
+/*
+ * Stable shared chrome entry point for Premier product surfaces.
+ * tokens.css currently owns the variables and common brand/action primitives;
+ * this facade lets consumers depend on the documented chrome contract without
+ * reaching into its implementation.
+ */
+@import './tokens.css';

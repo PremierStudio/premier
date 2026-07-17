@@ -1,0 +1,36 @@
+/target/
+/node_modules/
+**/node_modules/
+**/.vite/
+**/coverage/
+/apps/viewer/dist/
+/apps/viewer/.svelte-kit/
+/apps/docs/dist/
+/apps/docs/.astro/
+/crates/premier-cli/assets/
+/sdk/js/dist/
+/.premier/
+**/.premier/
+/.tmp/
+/.codex/
+/.firecrawl/
+/.lavish/
+/.playwright-mcp/
+**/.wrangler/
+/outputs/
+/test-results/
+/work/
+/.DS_Store
+*.log
+
+# Local secrets must never be committed.
+.env
+.env.*
+!.env.example
+.dev.vars*
+
+# Local visual-review captures.
+/event-inspector-*.png
+/event-timeline-*.png
+/ui-redesign-*.png
+/ui-v2-*.png

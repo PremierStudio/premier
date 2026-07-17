@@ -1,0 +1,11 @@
+{
+  "name": "@premierstudio/premier-darwin-x64",
+  "version": "0.1.0",
+  "description": "Premier native binary for macOS on Intel",
+  "license": "Apache-2.0",
+  "os": ["darwin"],
+  "cpu": ["x64"],
+  "files": ["bin/premier", "README.md", "LICENSE"],
+  "publishConfig": { "access": "public", "provenance": true },
+  "repository": { "type": "git", "url": "git+https://github.com/PremierStudio/agent-trace.git", "directory": "npm/platforms/darwin-x64" }
+}

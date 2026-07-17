@@ -1,0 +1,36 @@
+{
+  "name": "@premierstudio/premier",
+  "version": "0.1.0",
+  "description": "Local-first flight recorder and investigation viewer for AI agent sessions",
+  "license": "Apache-2.0",
+  "bin": {
+    "premier": "bin/premier.js"
+  },
+  "files": [
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "optionalDependencies": {
+    "@premierstudio/premier-darwin-arm64": "0.1.0",
+    "@premierstudio/premier-darwin-x64": "0.1.0",
+    "@premierstudio/premier-linux-arm64-gnu": "0.1.0",
+    "@premierstudio/premier-linux-x64-gnu": "0.1.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PremierStudio/agent-trace.git",
+    "directory": "packages/premier-cli"
+  },
+  "homepage": "https://premier.dev/docs/install"
+}

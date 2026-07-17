@@ -1,0 +1,206 @@
+name: Signed release
+
+on:
+  push:
+    tags: ['v[0-9]+.[0-9]+.[0-9]+*']
+  # Preflight-only run: verifies npmjs.com trusted publishing without
+  # building or publishing anything. Dispatch this before pushing a tag.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  # Exercises the same OIDC token exchange `npm publish` will perform. The
+  # trusted-publisher link pins this workflow file and the release
+  # environment, so only this workflow can prove the configuration exists.
+  verify-npm-trusted-publishing:
+    runs-on: ubuntu-24.04
+    environment: release
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+      - run: node scripts/preflight-npm-trusted-publishing.mjs
+
+  build:
+    if: github.event_name == 'push'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15-intel
+            target: x86_64-apple-darwin
+          - os: macos-14
+            target: aarch64-apple-darwin
+          - os: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+          - os: ubuntu-24.04-arm
+            target: aarch64-unknown-linux-gnu
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24
+          cache: npm
+      - uses: dtolnay/rust-toolchain@4be7066ada62dd38de10e7b70166bc74ed198c30 # stable
+        with:
+          targets: ${{ matrix.target }}
+      - run: npm ci
+      - name: Require tag and workspace versions to match
+        shell: bash
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          cargo_version="$(awk -F' *= *' '/^version = / { gsub(/"/, "", $2); print $2; exit }' Cargo.toml)"
+          node_version="$(node -p "require('./package.json').version || '$cargo_version'")"
+          [[ "$version" == "$cargo_version" ]]
+          [[ "$node_version" == "$cargo_version" ]]
+          for manifest in \
+            packages/premier-cli/package.json \
+            sdk/js/package.json \
+            npm/platforms/*/package.json; do
+            [[ "$(node -p "require('./$manifest').version")" == "$version" ]]
+          done
+          node -e '
+            const expected = process.argv[1];
+            const pins = require("./packages/premier-cli/package.json").optionalDependencies ?? {};
+            for (const [name, pinned] of Object.entries(pins)) {
+              if (pinned !== expected) {
+                console.error(`launcher pins ${name}@${pinned}, expected ${expected}`);
+                process.exit(1);
+              }
+            }
+          ' "$version"
+      - run: npm run build
+      - run: cargo test --workspace --locked
+      - name: Package reproducible release
+        shell: bash
+        run: |
+          ./scripts/package-release.sh \
+            --target "${{ matrix.target }}" \
+            --version "${GITHUB_REF_NAME#v}" \
+            --skip-viewer \
+            --expect-sigstore
+      - uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        with:
+          path: dist
+          format: spdx-json
+          output-file: dist/premier-${{ matrix.target }}.spdx.json
+          upload-artifact: false
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: premier-${{ matrix.target }}
+          path: dist/*
+          if-no-files-found: error
+
+  publish:
+    needs: [build, verify-npm-trusted-publishing]
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    environment: release
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - name: Use npm 12 secure install and trusted-publishing behavior
+        run: npm install --global npm@12
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          path: release-assets
+          merge-multiple: true
+      - uses: sigstore/cosign-installer@398d4b0eeef1380460a10c8013a76f728fb906ac # v3.9.1
+      - name: Build authenticated checksum manifest and sign every subject
+        shell: bash
+        run: |
+          cd release-assets
+          sha256sum -- ./*.tar.gz | sort -k2 > SHA256SUMS
+          cosign sign-blob --yes --bundle SHA256SUMS.sigstore.json SHA256SUMS
+          for archive in ./*.tar.gz; do
+            cosign sign-blob --yes --bundle "$archive.sigstore.json" "$archive"
+            cosign verify-blob \
+              --bundle "$archive.sigstore.json" \
+              --certificate-identity "https://github.com/PremierStudio/agent-trace/.github/workflows/release.yml@${GITHUB_REF}" \
+              --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+              "$archive"
+          done
+      - uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
+        with:
+          subject-path: release-assets/*.tar.gz
+      - uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.6.2
+        with:
+          files: release-assets/*
+          fail_on_unmatched_files: true
+          generate_release_notes: true
+          make_latest: true
+      - name: Stage script-free npm packages from signed release archives
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+          [[ "$(node -p "require('./package.json').version")" == "$version" ]]
+          [[ "$(node -p "require('./packages/premier-cli/package.json').version")" == "$version" ]]
+          [[ "$(node -p "require('./sdk/js/package.json').version")" == "$version" ]]
+          for manifest in npm/platforms/*/package.json; do
+            [[ "$(node -p "require('./$manifest').version")" == "$version" ]]
+          done
+          npm ci
+          npm run build --workspace @premierstudio/trace
+
+          cp LICENSE packages/premier-cli/LICENSE
+          cp LICENSE sdk/js/LICENSE
+          for directory in npm/platforms/*; do
+            cp LICENSE "$directory/LICENSE"
+          done
+
+          stage_platform() {
+            target="$1"
+            directory="$2"
+            package_root="premier-$version-$target"
+            archive="release-assets/$package_root.tar.gz"
+            destination="npm/platforms/$directory/bin/premier"
+            [[ -f "$archive" ]]
+            mkdir -p "$(dirname "$destination")"
+            tar -xOf "$archive" "$package_root/bin/premier" > "$destination"
+            chmod 0755 "$destination"
+          }
+
+          stage_platform aarch64-apple-darwin darwin-arm64
+          stage_platform x86_64-apple-darwin darwin-x64
+          stage_platform aarch64-unknown-linux-gnu linux-arm64-gnu
+          stage_platform x86_64-unknown-linux-gnu linux-x64-gnu
+      - name: Publish npm packages through OIDC with provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="${GITHUB_REF_NAME#v}"
+
+          publish_if_missing() {
+            package="$1"
+            directory="$2"
+            if npm view "$package@$version" version >/dev/null 2>&1; then
+              echo "$package@$version already exists; skipping"
+            else
+              # ./-prefix so npm parses the argument as a directory, never as a
+              # github:<owner>/<repo> shorthand (npm 12 refuses git specs).
+              npm publish "./$directory" --access public --provenance
+            fi
+          }
+
+          publish_if_missing @premierstudio/premier-darwin-arm64 npm/platforms/darwin-arm64
+          publish_if_missing @premierstudio/premier-darwin-x64 npm/platforms/darwin-x64
+          publish_if_missing @premierstudio/premier-linux-arm64-gnu npm/platforms/linux-arm64-gnu
+          publish_if_missing @premierstudio/premier-linux-x64-gnu npm/platforms/linux-x64-gnu
+          publish_if_missing @premierstudio/trace sdk/js
+          publish_if_missing @premierstudio/premier packages/premier-cli

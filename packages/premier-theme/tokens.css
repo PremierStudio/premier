@@ -1,0 +1,195 @@
+/**
+ * Premier shared design tokens.
+ * Shared by the open-source Agent Trace viewer surfaces.
+ */
+
+@font-face {
+  font-family: 'Ananda Black Personal';
+  /* The wordmark is brand artwork: always resolve to the same cursive face on every surface. */
+  font-display: swap;
+  src: url('/fonts/ananda-black-personal-use.ttf') format('truetype');
+}
+
+:root {
+  font-family: 'Source Sans 3 Variable', 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
+  color: #f5f7fa;
+  background: #020202;
+  font-synthesis: none;
+  --surface: #050505;
+  --panel: #0b0e13;
+  --panel-raised: #111317;
+  --panel-overlay: #101216;
+  --line: rgba(255, 255, 255, .09);
+  --line-soft: rgba(255, 255, 255, .055);
+  --text: #f5f7fa;
+  --text-secondary: #c8d1de;
+  --muted: #8a9ab0;
+  --muted-strong: #a6b3c4;
+  --accent: #6f7bf7;
+  --accent-strong: #9eaaff;
+  --accent-deep: #4f5bd5;
+  --accent-soft: rgba(111, 123, 247, .15);
+  --accent-glow: rgba(111, 123, 247, .28);
+  --accent-focus: #aab4ff;
+  /* Compatibility aliases. New brand UI should use --accent directly. */
+  --blue: var(--accent);
+  --blue-strong: var(--accent-strong);
+  --blue-soft: var(--accent-soft);
+  --green: #63dca5;
+  --amber: #f5bc68;
+  --purple: var(--accent-strong);
+  --cyan: #66d8d5;
+  --red: #ff7c78;
+  --focus: var(--accent-focus);
+  --shadow-overlay: 0 24px 80px rgba(0, 0, 0, .58), 0 0 0 1px rgba(255,255,255,.035);
+}
+
+* { box-sizing: border-box; }
+button, input, select, textarea { font: inherit; }
+button { color: inherit; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+button:focus-visible { position: relative; z-index: 1; }
+::selection { color: white; background: rgba(111, 123, 247, .55); }
+* { scrollbar-width: thin; scrollbar-color: #30343b transparent; }
+
+/* Brand */
+.brand {
+  height: 100%;
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border-right: 1px solid var(--line);
+  color: inherit;
+  text-decoration: none;
+}
+.brand:hover { color: inherit; }
+.brand-mark {
+  flex: 0 0 auto;
+  display: none;
+  width: 32px;
+  height: 32px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--accent-strong) 28%, transparent);
+  border-radius: 4px;
+  color: var(--accent-strong);
+  background: rgba(16,22,34,.96);
+  box-shadow: inset 0 1px rgba(255,255,255,.12), 0 10px 24px rgba(0,0,0,.3);
+}
+.brand-wordmark {
+  display: block;
+  color: var(--accent-strong);
+  font-family: 'Ananda Black Personal', 'Segoe Script', cursive;
+  font-size: 25px;
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: .01em;
+  text-shadow: 0 10px 22px var(--accent-glow);
+}
+.brand-product {
+  color: var(--muted-strong);
+  font-family: 'IBM Plex Sans Variable', 'IBM Plex Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+/* Shared action chrome */
+.action-button, .action-primary, .action-feedback {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 10px;
+  border: 1px solid #364258;
+  border-radius: 6px;
+  color: #c3cddd;
+  background: #111722;
+  font-size: 11px;
+  font-weight: 650;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+}
+.action-button:hover, .action-feedback:hover {
+  border-color: #536582;
+  color: white;
+  background: #171f2c;
+}
+.action-primary {
+  border-color: var(--blue);
+  color: white;
+  background: var(--blue);
+}
+.action-primary:hover {
+  border-color: var(--blue-strong);
+  background: var(--accent-deep);
+  color: white;
+}
+.action-button:disabled, .action-primary:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+.action-button[data-active='true'] {
+  border-color: var(--blue);
+  color: white;
+  background: var(--blue-soft);
+  box-shadow: inset 0 -2px var(--blue);
+}
+
+/* Badges */
+.actor-badge, .status-badge, .badge {
+  display: inline-block;
+  padding: 4px 6px;
+  border: 1px solid #3b4a64;
+  border-radius: 4px;
+  color: #c3d0e7;
+  background: #121a27;
+  font: 9px 'IBM Plex Mono', monospace;
+  text-transform: uppercase;
+}
+.status-badge[data-status='error'],
+.status-badge[data-status='failed'],
+.status-badge[data-status='denied'] {
+  border-color: rgba(255,113,109,.45);
+  color: #ffaaa6;
+  background: rgba(255,113,109,.08);
+}
+.status-badge[data-status='ok'],
+.status-badge[data-status='approved'] {
+  border-color: rgba(95,214,160,.4);
+  color: #91e3bd;
+  background: rgba(95,214,160,.07);
+}
+
+.mono { font-family: 'IBM Plex Mono', monospace; }
+.connection {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 7px;
+  padding: 0 18px;
+  color: var(--muted-strong);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+.connection.live { color: #9ce5c3; }
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 10px 14px;
+  background: var(--blue);
+  color: white;
+  font-weight: 700;
+}
+.skip-link:focus { left: 12px; top: 12px; }

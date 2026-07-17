@@ -1,0 +1,2 @@
+{"type":"thread.started","thread_id":"codex-thread"}
+{"type":"item.completed","item":{"id":"cmd-1","type":"command_execution","command":"rg TODO","exit_code":0}}

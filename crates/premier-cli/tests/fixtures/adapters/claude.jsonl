@@ -1,0 +1,2 @@
+{"type":"system","subtype":"init","session_id":"claude-session"}
+{"type":"hook_started","hook_name":"PreToolUse","tool_use_id":"tool-1","tool_name":"Read"}
