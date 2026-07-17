@@ -4,6 +4,8 @@ Premier is a local-first **agent reporter**: a single PATH-installable binary th
 
 It captures terminal activity and accepts typed runtime events for agents, subagents, delegation, model calls, tools, approvals, messages, joins, and framework-specific payloads. Every event can carry actor identity, causal parents, spans, cross-links, correlation IDs, status, duration, and structured payloads.
 
+![Premier Agent Trace investigating a real multi-agent failure trace](docs/assets/premier-agent-trace-viewer.png)
+
 ## Install (production)
 
 Install the script-free npm launcher globally:
