@@ -26,10 +26,10 @@
     "security:audit": "npm audit --audit-level=low && cargo audit && npm run security:secrets"
   },
   "devDependencies": {
-    "@playwright/test": "1.61.1",
-    "typescript": "5.9.3"
+    "@playwright/test": "1.62.1",
+    "typescript": "7.0.2"
   },
   "overrides": {
-    "typescript": "5.9.3"
+    "typescript": "7.0.2"
   }
 }
