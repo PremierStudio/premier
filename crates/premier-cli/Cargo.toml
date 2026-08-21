@@ -44,4 +44,4 @@ tower.workspace = true
 [target.'cfg(unix)'.dependencies]
 libc = "0.2"
 portable-pty = "0.9"
-signal-hook = "0.3"
+signal-hook = "0.4"
