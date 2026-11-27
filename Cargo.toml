@@ -56,7 +56,7 @@ libc = "0.2"
 proptest = "1"
 qrcode = { version = "0.14", default-features = false, features = ["svg"] }
 rand = "0.8"
-rcgen = { version = "0.13", default-features = false, features = ["crypto", "ring", "pem"] }
+rcgen = { version = "0.14", default-features = false, features = ["crypto", "ring", "pem"] }
 rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12", "logging"] }
 rustls-pemfile = "2"
 secrecy = "0.10"
