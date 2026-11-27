@@ -2586,7 +2586,7 @@ dependencies = [
  "tokio-rustls",
  "tracing",
  "url",
- "webpki-roots 0.26.11",
+ "webpki-roots",
  "windows-sys 0.52.0",
  "zeroize",
 ]
@@ -2628,7 +2628,7 @@ dependencies = [
  "toml 0.8.23",
  "tracing",
  "url",
- "webpki-roots 0.26.11",
+ "webpki-roots",
  "zeroize",
 ]
 
@@ -2676,7 +2676,7 @@ dependencies = [
  "tower-service",
  "tracing",
  "url",
- "webpki-roots 0.26.11",
+ "webpki-roots",
  "zeroize",
 ]
 
@@ -4329,15 +4329,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3b1f9c3798725016c6ee5f2f57869ec0831e8bbc0ab0310a86e787e97f41389e"
 dependencies = [
  "unicode-ident",
-]
-
-[[package]]
-name = "webpki-roots"
-version = "0.26.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "521bc38abb08001b01866da9f51eb7c5d647a19260e00054a8c7fd5f9e57f7a9"
-dependencies = [
- "webpki-roots 1.0.12",
 ]
 
 [[package]]
