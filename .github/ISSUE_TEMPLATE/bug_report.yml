@@ -1,0 +1,75 @@
+name: Bug report
+description: Something in Premier does not work as documented.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. **If this could let someone see files, branches or secrets they should not, stop here** and report it privately at https://github.com/PremierStudio/premier/security/advisories/new instead.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: The smallest set of commands, policy snippets or clicks that shows the problem. Remove real secrets and private paths.
+      placeholder: |
+        1. premier serve ...
+        2. git clone ...
+        3. ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Premier version
+      description: Output of `premier --version`, the image tag, or the commit.
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: How do you run Premier?
+      options:
+        - Docker image (ghcr.io/premierstudio/premier)
+        - Docker Compose with Caddy (deploy/)
+        - Release binary
+        - cargo install premier-cli
+        - Built from source
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      multiple: true
+      options:
+        - Git transport (HTTP/SSH)
+        - Policy (.access.toml)
+        - Branches / Squash-Declassify
+        - Secrets / vault / KMS
+        - Agent sessions / proxy / sandbox
+        - Overlays
+        - MCP
+        - GitHub Companion
+        - Traces
+        - Studio (web UI)
+        - CLI
+        - Deployment / operations
+        - Documentation
+  - type: input
+    id: os
+    attributes:
+      label: Host OS
+      placeholder: e.g. Ubuntu 24.04, Windows 11, macOS 15
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant server output (`premier serve --log-format json`). Scrub tokens and secrets first.
+      render: text

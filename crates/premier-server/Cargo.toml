@@ -1,0 +1,63 @@
+[package]
+name = "premier-server"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Premier control-plane server: Git over HTTP, accounts, repositories, agent sessions, MCP gateway and the Studio API"
+repository.workspace = true
+homepage.workspace = true
+rust-version.workspace = true
+readme = "../../README.md"
+keywords = ["git", "vcs", "server", "access-control", "ai-agents"]
+categories = ["web-programming::http-server", "development-tools", "authentication"]
+
+[dependencies]
+age.workspace = true
+aes-gcm.workspace = true
+argon2.workspace = true
+axum.workspace = true
+base64.workspace = true
+bytes.workspace = true
+chrono.workspace = true
+flate2.workspace = true
+globset.workspace = true
+hmac.workspace = true
+http.workspace = true
+http-body-util.workspace = true
+hyper.workspace = true
+hyper-util.workspace = true
+qrcode.workspace = true
+rustls.workspace = true
+rusqlite = { version = "0.32", features = ["bundled"] }
+serde.workspace = true
+serde_json.workspace = true
+sha1.workspace = true
+premier-core.workspace = true
+premier-git-bridge.workspace = true
+premier-overlay.workspace = true
+premier-policy.workspace = true
+premier-proxy.workspace = true
+premier-secrets.workspace = true
+premier-ssh.workspace = true
+premier-trace.workspace = true
+subtle.workspace = true
+tar.workspace = true
+tempfile.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+tokio-rustls.workspace = true
+tokio-stream.workspace = true
+toml.workspace = true
+tower-http.workspace = true
+tower-service.workspace = true
+tracing.workspace = true
+url.workspace = true
+webpki-roots.workspace = true
+zeroize.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+tokio-rustls.workspace = true
+
+[lints]
+workspace = true

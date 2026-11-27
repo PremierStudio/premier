@@ -1,0 +1,23 @@
+# Production Caddyfile for Premier with automatic HTTPS.
+# Set PREMIER_DOMAIN (e.g. git.example.com) for automatic Let's Encrypt TLS,
+# or leave unset to serve local HTTPS at https://localhost.
+
+{$PREMIER_DOMAIN:localhost} {
+	# Prometheus metrics stay on the Compose network. Scrapers use premier:7420.
+	@metrics path /metrics
+	respond @metrics 404
+
+	reverse_proxy premier:7420 {
+		# Stream SSE audit/session events and large Git packfiles immediately without buffering.
+		flush_interval -1
+
+		# Caddy v2 automatically sets X-Forwarded-For (preserving multi-hop chains),
+		# X-Forwarded-Proto, and X-Forwarded-Host (preserving non-default ports).
+		# Premier accepts these headers only from peers listed in PREMIER_TRUSTED_PROXIES.
+
+		transport http {
+			read_timeout 0s
+			write_timeout 0s
+		}
+	}
+}

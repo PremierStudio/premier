@@ -1,0 +1,26 @@
+[package]
+name = "premier"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Git-compatible source control with path/branch confidentiality, capability-proxied secrets, and AI-agent sandboxing"
+repository.workspace = true
+homepage.workspace = true
+rust-version.workspace = true
+readme = "README.md"
+keywords = ["git", "vcs", "access-control", "secrets", "ai-agents"]
+categories = ["development-tools", "authentication", "cryptography"]
+
+[dependencies]
+premier-core.workspace = true
+premier-policy.workspace = true
+premier-secrets.workspace = true
+premier-overlay.workspace = true
+premier-trace.workspace = true
+premier-proxy.workspace = true
+premier-git-bridge.workspace = true
+premier-ssh.workspace = true
+premier-server.workspace = true
+
+[lints]
+workspace = true

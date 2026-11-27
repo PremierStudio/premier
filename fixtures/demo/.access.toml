@@ -1,0 +1,49 @@
+version = 1
+
+[defaults]
+public = ["traverse", "list", "read"]
+authenticated = ["traverse", "list", "read"]
+
+[zones.public]
+paths = ["**"]
+exclude = ["billing/**", "secrets/**"]
+owners = ["@alice"]
+
+[zones.billing]
+paths = ["billing/**"]
+owners = ["@alice"]
+description = "Billing ledger and payment provider integrations"
+
+[[rules]]
+id = "deny-billing-everyone"
+effect = "deny"
+principals = ["*"]
+zones = ["billing"]
+capabilities = ["traverse", "list", "read", "write", "use"]
+reason = "Billing internals restricted by default"
+
+[[rules]]
+id = "allow-billing-secret-use"
+effect = "allow"
+principals = ["group:billing"]
+paths = ["secrets/billing/**"]
+capabilities = ["use"]
+reason = "Billing engineers and delegated agents may USE billing secrets via egress proxy"
+
+[[rules]]
+id = "allow-billing-ledger-write"
+effect = "allow"
+principals = ["group:billing"]
+paths = ["billing/ledger/**"]
+capabilities = ["traverse", "list", "read", "write"]
+
+[[agent_profiles]]
+name = "ui-agent"
+allow_paths = ["apps/web/**", "README.md", "docs/**"]
+deny_paths = ["billing/**"]
+capabilities = ["traverse", "list", "read", "write"]
+allow_secret_use = ["STRIPE_API_KEY", "GITHUB_TOKEN"]
+allow_egress_hosts = ["registry.npmjs.org", "crates.io"]
+
+[quarantine]
+instruction_files = ["AGENTS.md", "CLAUDE.md", ".cursorrules"]

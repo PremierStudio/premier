@@ -1,0 +1,35 @@
+# OS & Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Environments & Local Secrets (never commit plaintext values; commit .env.schema instead)
+.env
+.env.*
+!.env.schema
+!.env.example
+
+# Build & Dependencies
+node_modules/
+target/
+dist/
+build/
+.turbo/
+.next/
+*.log
+*.tsbuildinfo
+coverage/
+
+# Local Agent & Sandbox State
+.tmp/
+.cache/
+.premier-local/
+.premier/
+
+# Local tool state (CybeDefend config and audit records stay tracked)
+t3.json
+.cybedefend/out/
+.cybedefend/replay/

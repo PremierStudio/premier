@@ -1,0 +1,31 @@
+[package]
+name = "premier-trace"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Premier native agent-trace engine: local-first AI coding agent tracing, error diagnostics, delivery reporting, and ACL-scoped prompt provenance"
+repository.workspace = true
+homepage.workspace = true
+rust-version.workspace = true
+readme = "../../README.md"
+keywords = ["tracing", "ai-agents", "provenance", "otlp", "audit"]
+categories = ["development-tools", "development-tools::debugging"]
+
+[dependencies]
+chrono.workspace = true
+hex.workspace = true
+premier-core.workspace = true
+premier-policy.workspace = true
+premier-secrets.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+
+[lints]
+workspace = true

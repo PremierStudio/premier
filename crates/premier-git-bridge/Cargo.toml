@@ -1,0 +1,28 @@
+[package]
+name = "premier-git-bridge"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Premier Git bridge: policy-projected fetch and push, private branches, and Squash-Declassify publishing"
+repository.workspace = true
+homepage.workspace = true
+rust-version.workspace = true
+readme = "../../README.md"
+keywords = ["git", "vcs", "access-control", "pack-protocol", "security"]
+categories = ["development-tools"]
+
+[dependencies]
+chrono.workspace = true
+flate2.workspace = true
+hex.workspace = true
+serde.workspace = true
+premier-core.workspace = true
+premier-overlay.workspace = true
+premier-policy.workspace = true
+sha1.workspace = true
+sha2.workspace = true
+tempfile.workspace = true
+thiserror.workspace = true
+
+[lints]
+workspace = true
