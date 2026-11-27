@@ -34,7 +34,7 @@ premier-trace = { version = "0.1.0", path = "crates/premier-trace" }
 premier-server = { version = "0.1.0", path = "crates/premier-server" }
 
 aes-gcm = "0.10"
-age = "0.11"
+age = "0.12"
 aho-corasick = "1"
 anyhow = "1"
 argon2 = "0.5"
