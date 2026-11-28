@@ -1,6 +1,6 @@
 {
   "about": "The verdicts of the last triage of /cybedefend. The next run keeps each one while its file has not changed (assess.md).",
-  "at": "2026-11-28T02:50:08.194Z",
+  "at": "2026-11-28T02:57:47.449Z",
   "code": {
     "commit": "225c8f516689c6d098e0e1c0bef87e93f2a6fe84",
     "changed": {
@@ -11,7 +11,7 @@
       ".github/PULL_REQUEST_TEMPLATE.md": "b897050708ff686177aa97303b00462555408896",
       ".github/dependabot.yml": "c1e62e8240d812c078fd8b15ba7e3845eae968b8",
       ".github/workflows/ci.yml": "b07304d80ca9d58dcd528b9aeb3ab1174ad33c62",
-      ".github/workflows/release.yml": "2f94438b537c8e888e759d3a9b60de3e6f08b564",
+      ".github/workflows/release.yml": "3d757977630d85557d3980c03fc65ef62192f5ee",
       ".github/workflows/security.yml": "32b2304ce6dbd8005ada136f01192c88fdffcc97",
       ".gitignore": "5e7dca1a2181312e65649c047e94c27525890394",
       "AGENTS.md": "eb933331a1434cc62ec6eb0af0021fb9ad65622e",
