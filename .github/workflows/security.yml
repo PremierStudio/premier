@@ -49,7 +49,7 @@ jobs:
           install -m 0755 "$tmpdir/cargo-audit-x86_64-unknown-linux-musl-v0.23.0/cargo-audit" "$HOME/.cargo/bin/cargo-audit"
       # deny.toml is the policy: licenses, bans, sources, yanked crates, advisories.
       - name: cargo-deny
-        run: cargo deny check --all-features --manifest-path ./Cargo.toml
+        run: cargo deny --manifest-path ./Cargo.toml --all-features check
       - name: cargo-audit
         run: cargo audit
 
