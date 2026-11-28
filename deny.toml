@@ -1,0 +1,45 @@
+# cargo-deny configuration (v2 format). Run: cargo deny check
+# https://embarkstudios.github.io/cargo-deny/
+
+[graph]
+all-features = true
+
+[advisories]
+version = 2
+# Every RustSec vulnerability fails the check; yanked crates do too.
+yanked = "deny"
+unmaintained = "workspace"
+ignore = [
+    { id = "RUSTSEC-2026-0543", reason = "chrono v0.4 has an unmaintained advisory only (no security vulnerability); russh-util also pulls chrono until upstream migrates" },
+]
+
+[licenses]
+version = 2
+# Only these licenses are accepted. Anything else, including GPL, AGPL, LGPL and
+# SSPL, fails the check (an `A OR B` expression passes if either side is allowed).
+allow = [
+    "Apache-2.0",
+    "MIT",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "Unicode-3.0",
+    "CDLA-Permissive-2.0",
+    "Zlib",
+    "MPL-2.0",
+]
+confidence-threshold = 0.9
+
+[licenses.private]
+ignore = false
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+allow-wildcard-paths = true
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+allow-git = []

@@ -1,0 +1,15 @@
+# Optional Docker Compose override enabling Premier's pure-Rust Git-over-SSH listener.
+# Keeping port 2222 here prevents port conflicts on hosts where SSH is disabled.
+#
+# Usage:
+#   PREMIER_DOMAIN=git.example.com \
+#     docker compose -f deploy/docker-compose.yml -f deploy/docker-compose.ssh.yml up -d
+#
+# To publish a different host port (e.g. 22), set PREMIER_SSH_PORT=22.
+
+services:
+  premier:
+    environment:
+      PREMIER_SSH_BIND: ${PREMIER_SSH_BIND:-0.0.0.0:2222}
+    ports:
+      - "${PREMIER_SSH_PORT:-2222}:2222"

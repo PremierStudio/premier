@@ -1,0 +1,10 @@
+# Build context = Rust workspace + apps/web sources. Workspace state and build output stay out.
+.git
+.premier
+.premier-local
+target
+**/node_modules
+apps/web/dist
+**/*.tsbuildinfo
+*.log
+.cybedefend

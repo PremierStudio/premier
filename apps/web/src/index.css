@@ -1,0 +1,652 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+  --pr-void: #070912;
+  --pr-navy: #0d1224;
+  --pr-glass-header: rgba(9, 12, 24, 0.96);
+  --pr-glass-surface: rgba(13, 17, 32, 0.88);
+  --pr-glass-elevated: rgba(11, 15, 28, 0.97);
+  --pr-elevated-rim: rgba(214, 226, 255, 0.16);
+  --pr-elevated-shadow: 0 24px 64px rgba(0, 0, 0, 0.72), 0 4px 16px rgba(0, 0, 0, 0.45);
+  --pr-glass-well: rgba(6, 8, 16, 0.74);
+
+  --pr-line: rgba(214, 226, 255, 0.085);
+  --pr-line-soft: rgba(214, 226, 255, 0.048);
+  --pr-rim: rgba(214, 226, 255, 0.16);
+
+  --pr-accent: #7f95f8;
+  --pr-accent-soft: rgba(127, 149, 248, 0.14);
+  --pr-ice: #9ec0f5;
+
+  --pr-mint: #5bdba2;
+  --pr-cyan: #67d6dc;
+  --pr-attention: #9ec0f5;
+  --pr-coral: #f27c7c;
+
+  --pr-text: #f5f7fd;
+  --pr-secondary: #d2dbee;
+  --pr-muted: #a6b5cf;
+  --pr-dim: #98a8c4;
+
+  /* Serene obsidian syntax highlighting palette */
+  --pr-syn-kw: #9caeff;
+  --pr-syn-type: #78d8e6;
+  --pr-syn-fn: #c2d4ff;
+  --pr-syn-str: #7be0b4;
+  --pr-syn-num: #a5b8ff;
+  --pr-syn-comment: #7b8ca8;
+  --pr-syn-attr: #c7a7ff;
+  --pr-syn-op: #8ea6d8;
+  --pr-syn-punct: #8392ae;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background-color: var(--pr-void);
+    color: var(--pr-text);
+    font-family:
+      "Inter",
+      "IBM Plex Sans",
+      ui-sans-serif,
+      system-ui,
+      -apple-system,
+      sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  code,
+  pre,
+  kbd,
+  .font-mono {
+    font-family:
+      "JetBrains Mono",
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid rgba(158, 192, 245, 0.48);
+    outline-offset: 2px;
+  }
+}
+
+/* Full-bleed serene midnight-obsidian glass canvas */
+.pr-shell-bg {
+  background-color: var(--pr-void);
+  background-image:
+    radial-gradient(ellipse 72% 46% at 50% -10%, rgba(112, 136, 245, 0.14), transparent 68%),
+    radial-gradient(ellipse 52% 44% at 88% 4%, rgba(92, 128, 242, 0.09), transparent 64%),
+    radial-gradient(ellipse 48% 42% at 10% 96%, rgba(68, 102, 206, 0.09), transparent 68%);
+  background-attachment: fixed;
+}
+
+/* Precision architectural dot-grid + ambient halo for centered welcome / empty stages */
+.pr-stage-backdrop {
+  position: relative;
+  isolation: isolate;
+}
+
+.pr-stage-backdrop::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background-image:
+    radial-gradient(circle at 50% 42%, rgba(127, 149, 248, 0.12) 0%, rgba(79, 106, 224, 0.04) 30%, transparent 62%),
+    radial-gradient(rgba(214, 226, 255, 0.09) 1px, transparent 1px);
+  background-size: 100% 100%, 26px 26px;
+  mask-image: radial-gradient(ellipse 64% 58% at 50% 46%, #000 0%, rgba(0, 0, 0, 0.45) 55%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 64% 58% at 50% 46%, #000 0%, rgba(0, 0, 0, 0.45) 55%, transparent 100%);
+}
+
+/* Tactile specular glass action card (welcome screen, featured launchers) */
+.pr-action-card {
+  position: relative;
+  background: linear-gradient(180deg, rgba(18, 24, 44, 0.92) 0%, rgba(11, 15, 29, 0.94) 100%);
+  border: 1px solid rgba(214, 226, 255, 0.1);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.09),
+    0 12px 32px rgba(0, 0, 0, 0.34);
+  transition:
+    transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background 180ms ease;
+}
+
+.pr-action-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(158, 192, 245, 0.34);
+  background: linear-gradient(180deg, rgba(23, 31, 56, 0.96) 0%, rgba(13, 18, 35, 0.96) 100%);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.16),
+    0 18px 42px rgba(0, 0, 0, 0.48),
+    0 0 0 1px rgba(127, 149, 248, 0.12);
+}
+
+.pr-action-card:active {
+  transform: translateY(0);
+}
+
+.pr-icon-tile {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.025) 100%);
+  border: 1px solid rgba(214, 226, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.14),
+    0 4px 12px rgba(0, 0, 0, 0.28);
+}
+
+@keyframes pr-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.pr-page-enter {
+  animation: pr-fade-in 160ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pr-page-enter {
+    animation: none;
+  }
+}
+
+@layer components {
+  .pr-topbar {
+    background: var(--pr-glass-header);
+    border-bottom: 1px solid var(--pr-line);
+  }
+
+  .pr-surface {
+    background: var(--pr-glass-surface);
+    border: 1px solid var(--pr-line);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+  }
+
+  .pr-elevated {
+    /* Floating menus/modals/popovers: near-opaque obsidian, no backdrop-filter. */
+    background: var(--pr-glass-elevated);
+    border: 1px solid var(--pr-elevated-rim);
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+      var(--pr-elevated-shadow);
+    isolation: isolate;
+  }
+
+  .pr-well {
+    background: var(--pr-glass-well);
+    border: 1px solid var(--pr-line-soft);
+  }
+
+  .pr-pill {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--pr-line);
+    transition:
+      background-color 140ms ease,
+      border-color 140ms ease,
+      color 140ms ease,
+      transform 90ms ease;
+  }
+
+  .pr-pill:hover {
+    background: rgba(255, 255, 255, 0.065);
+    border-color: rgba(214, 226, 255, 0.18);
+  }
+
+  .pr-pill:active:not(:disabled) {
+    transform: translateY(0.5px);
+  }
+
+  .pr-pill:disabled:hover {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: var(--pr-line);
+  }
+
+  .pr-pill-active {
+    background: rgba(127, 149, 248, 0.16);
+    border: 1px solid rgba(158, 192, 245, 0.34);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.14);
+    color: #f3f6fd;
+  }
+
+  .pr-action-btn {
+    background: linear-gradient(180deg, rgba(158, 192, 245, 0.95) 0%, rgba(127, 149, 248, 0.92) 100%);
+    color: #070a15;
+    font-weight: 600;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 18px rgba(127, 149, 248, 0.24);
+    transition: filter 140ms ease, transform 120ms ease;
+  }
+
+  .pr-action-btn:hover {
+    filter: brightness(1.06);
+  }
+}
+
+/* Worktable cards: calm hover rim and indigo-ice selection */
+.pr-card-interactive {
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.pr-card-interactive:hover {
+  border-color: rgba(158, 192, 245, 0.24);
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.pr-card-selected,
+.pr-card-selected:hover {
+  border-color: rgba(158, 192, 245, 0.42);
+  background-color: rgba(127, 149, 248, 0.11);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+}
+
+@keyframes pr-pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+/* Live presence dot; colour comes from the element's own background utility */
+.pr-presence-dot {
+  display: inline-block;
+  height: 0.5rem;
+  width: 0.5rem;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  animation: pr-pulse-soft 1.8s ease-in-out infinite;
+}
+
+/* Smooth, low-glare obsidian skeleton shimmer. Fixed attachment + viewport-sized tile makes the
+   sweep line up across every sibling bar instead of each bar sweeping on its own. */
+@keyframes pr-shimmer-sweep {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 100vw 0;
+  }
+}
+
+.pr-shimmer {
+  background-color: transparent;
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 0%,
+    rgba(255, 255, 255, 0.04) 35%,
+    rgba(190, 212, 255, 0.095) 50%,
+    rgba(255, 255, 255, 0.04) 65%,
+    rgba(255, 255, 255, 0.04) 100%
+  );
+  background-size: 100vw 100%;
+  background-attachment: fixed;
+  animation: pr-shimmer-sweep 1.8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pr-shimmer {
+    animation: none;
+    background-image: none;
+    background-color: rgba(255, 255, 255, 0.055);
+  }
+}
+
+/* Sculpted obsidian keycap */
+.pr-kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.3rem;
+  padding: 0.1rem 0.36rem;
+  border-radius: 0.375rem;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid rgba(214, 226, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 1px 0 rgba(0, 0, 0, 0.45);
+  font-size: 10.5px;
+  line-height: 1.15;
+  color: #cdd8ee;
+}
+
+/* Anchored/selected source code line */
+.pr-line-active {
+  background: rgba(127, 149, 248, 0.13);
+  box-shadow: inset 2px 0 0 0 rgba(158, 192, 245, 0.85);
+}
+
+/* In-file find match highlights */
+.pr-find-hit {
+  background: rgba(158, 192, 245, 0.24);
+  color: #eaf2ff;
+  border-radius: 3px;
+  padding: 0 1px;
+}
+
+.pr-find-hit-active {
+  background: rgba(158, 192, 245, 0.5);
+  color: #070912;
+  border-radius: 3px;
+  padding: 0 1px;
+  box-shadow: 0 0 0 1px rgba(158, 192, 245, 0.85);
+}
+
+/* Session replay range scrubber */
+.pr-scrubber {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 9999px;
+  background: rgba(214, 226, 255, 0.12);
+  border: 1px solid rgba(214, 226, 255, 0.12);
+  cursor: pointer;
+}
+
+.pr-scrubber::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, #c2d7fb 0%, #7f95f8 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.72);
+  box-shadow: 0 0 10px rgba(127, 149, 248, 0.55);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.pr-scrubber::-webkit-slider-thumb:hover {
+  transform: scale(1.12);
+  box-shadow: 0 0 14px rgba(158, 192, 245, 0.8);
+}
+
+.pr-scrubber::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, #c2d7fb 0%, #7f95f8 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.72);
+  box-shadow: 0 0 10px rgba(127, 149, 248, 0.55);
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.pr-concern-card {
+  background: rgba(8, 11, 22, 0.56);
+  border: 1px solid var(--pr-line);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
+}
+
+.pr-hunk-synced {
+  border-color: rgba(103, 214, 220, 0.48) !important;
+  box-shadow:
+    0 0 0 1px rgba(103, 214, 220, 0.25),
+    0 8px 28px rgba(103, 214, 220, 0.08);
+  animation: pr-sync-pulse 1.6s ease-out 1;
+}
+
+@keyframes pr-sync-pulse {
+  0% {
+    box-shadow:
+      0 0 0 2px rgba(103, 214, 220, 0.55),
+      0 0 24px rgba(127, 149, 248, 0.22);
+  }
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(103, 214, 220, 0.25),
+      0 8px 28px rgba(103, 214, 220, 0.08);
+  }
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(127, 142, 168, 0.24) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(127, 142, 168, 0.22);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(158, 192, 245, 0.38);
+}
+
+/* ── Two-Eyes Glass Wall ─────────────────────────────────────────────── */
+
+/* Frosted obsidian glass over what the other reality cannot see. */
+.pr-glass-frost {
+  background-color: rgba(10, 14, 28, 0.62);
+  background-image:
+    repeating-linear-gradient(
+      -45deg,
+      rgba(214, 226, 255, 0.045) 0,
+      rgba(214, 226, 255, 0.045) 1px,
+      transparent 1px,
+      transparent 9px
+    ),
+    linear-gradient(160deg, rgba(158, 192, 245, 0.07) 0%, rgba(7, 9, 18, 0) 55%);
+  backdrop-filter: blur(14px) saturate(1.25);
+  -webkit-backdrop-filter: blur(14px) saturate(1.25);
+  border: 1px solid var(--pr-line);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 0 1px rgba(127, 149, 248, 0.06);
+}
+
+/* The Glass Wall divider: a thin vertical ice-indigo light line. */
+.pr-glass-beam {
+  width: 2px;
+  background: linear-gradient(
+    180deg,
+    rgba(158, 192, 245, 0) 0%,
+    rgba(158, 192, 245, 0.85) 18%,
+    rgba(127, 149, 248, 0.95) 50%,
+    rgba(158, 192, 245, 0.85) 82%,
+    rgba(158, 192, 245, 0) 100%
+  );
+  box-shadow:
+    0 0 10px rgba(127, 149, 248, 0.45),
+    0 0 1px rgba(255, 255, 255, 0.6);
+}
+
+/* premier_cap_v1_* capability placeholder: shows a handle exists, never the value. */
+.pr-cap-shimmer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0 0.45em;
+  border-radius: 0.375rem;
+  border: 1px solid rgba(103, 214, 220, 0.34);
+  color: #bfeff2;
+  background-color: rgba(103, 214, 220, 0.08);
+  background-image: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgba(158, 192, 245, 0.32) 50%,
+    transparent 70%
+  );
+  background-size: 220% 100%;
+  background-repeat: no-repeat;
+  animation: pr-cap-shimmer 2.8s linear infinite;
+}
+
+@keyframes pr-cap-shimmer {
+  from {
+    background-position: 120% 0;
+  }
+  to {
+    background-position: -120% 0;
+  }
+}
+
+/* Structural ghost line: outline only, so no file text is ever implied. */
+.pr-ghost-bar {
+  height: 0.7rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(214, 226, 255, 0.1);
+  background: rgba(214, 226, 255, 0.025);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .pr-cap-shimmer {
+    animation: none !important;
+    background-image: none;
+  }
+}
+
+/* Premier Obsidian Monaco Editor integration */
+.premier-monaco-host {
+  background-color: #090d18;
+  border-color: var(--pr-line);
+}
+
+.premier-monaco-host .monaco-editor,
+.premier-monaco-host .monaco-editor .overflow-guard,
+.premier-monaco-host .monaco-diff-editor {
+  background-color: #090d18;
+}
+
+.premier-monaco-host .monaco-editor .margin,
+.premier-monaco-host .monaco-editor .monaco-editor-background {
+  background-color: #090d18;
+}
+
+.premier-monaco-host .monaco-diff-editor .diffOverview {
+  background-color: #090d18;
+  border-left: 1px solid rgba(214, 226, 255, 0.07);
+}
+
+.premier-monaco-host .monaco-editor .overflowingContentWidgets {
+  z-index: 60 !important;
+}
+
+.premier-monaco-host .monaco-editor .monaco-hover,
+.premier-monaco-host .monaco-editor .suggest-widget {
+  border-radius: 8px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.56);
+}
+
+.premier-monaco-host .monaco-editor .sticky-widget {
+  border-bottom: 1px solid rgba(214, 226, 255, 0.08);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.premier-monaco-host .monaco-scrollable-element > .scrollbar > .slider {
+  border-radius: 9999px;
+}
+
+/* Selected line range highlight */
+.premier-monaco-selected-line {
+  background: rgba(127, 149, 248, 0.14);
+}
+
+.premier-monaco-selected-gutter {
+  border-left: 2px solid rgba(158, 192, 245, 0.9);
+  margin-left: 2px;
+}
+
+/* Brief flash when jumping to a search hit or anchored line */
+.premier-monaco-flash-line {
+  background: rgba(158, 192, 245, 0.22);
+  box-shadow: inset 2px 0 0 0 rgba(158, 192, 245, 0.95);
+}
+
+/* Concise inline blame chip at the start of each commit block */
+.premier-monaco-blame-chip {
+  display: inline-block;
+  margin-right: 12px;
+  padding: 0 7px;
+  border-radius: 9999px;
+  background: rgba(127, 149, 248, 0.11);
+  border: 1px solid rgba(158, 192, 245, 0.2);
+  color: #8fa6cc !important;
+  font-size: 10.5px;
+  line-height: 16px;
+  letter-spacing: 0.01em;
+  vertical-align: middle;
+  user-select: none;
+}
+
+/* Review comment badge in diff viewer glyph margin */
+.premier-monaco-comment-glyph {
+  position: relative;
+  cursor: pointer;
+}
+
+.premier-monaco-comment-glyph::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  transform: translate(-50%, -50%);
+  border-radius: 9999px;
+  background: #79b8ff;
+  box-shadow: 0 0 0 3px rgba(121, 184, 255, 0.22);
+}
+
+.premier-monaco-comment-glyph:hover::before {
+  background: #9ec0f5;
+  box-shadow: 0 0 0 4px rgba(158, 192, 245, 0.34);
+}
+
+/* Visible old-side comment indicator in inline diff mode (where original glyph margin is hidden) */
+.premier-monaco-comment-old-line {
+  border-left: 2px solid #79b8ff;
+}
+
+.premier-monaco-comment-old-margin {
+  background: rgba(121, 184, 255, 0.14);
+}
+
+/* Indicate clickable gutter / line numbers on commentable review diffs */
+.premier-monaco-commentable .monaco-editor .margin-view-overlays .cgmr,
+.premier-monaco-commentable .monaco-editor .margin-view-overlays .line-numbers,
+.premier-monaco-commentable .monaco-editor .inline-deleted-margin-view-zone {
+  cursor: pointer;
+}

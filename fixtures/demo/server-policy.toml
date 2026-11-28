@@ -1,0 +1,17 @@
+version = 1
+
+[[rules]]
+id = "org-allow-billing-ledger"
+effect = "allow"
+principals = ["group:billing"]
+paths = ["billing/ledger/**"]
+capabilities = ["traverse", "list", "read", "write"]
+reason = "Org server grants billing team access to ledger subtree"
+
+[[rules]]
+id = "org-hard-deny-master-key"
+effect = "deny"
+principals = ["*"]
+paths = ["billing/ledger/master.key"]
+capabilities = ["traverse", "list", "read", "write", "use"]
+reason = "Server policy forbids direct key access regardless of in-repo rules"

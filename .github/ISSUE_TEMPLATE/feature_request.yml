@@ -1,0 +1,30 @@
+name: Feature request
+description: Suggest a new capability or an improvement.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do, and what gets in the way today?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you would like
+      description: How you picture it working. Commands, policy syntax or UI sketches help.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+  - type: checkboxes
+    id: invariants
+    attributes:
+      label: Security invariants
+      description: Premier's design rules are in AGENTS.md.
+      options:
+        - label: This does not rely on a client-side filter or an agent prompt as an access control.
+        - label: This does not expose raw secret values to agent processes or transcripts.

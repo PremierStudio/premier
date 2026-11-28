@@ -1,0 +1,32 @@
+[package]
+name = "premier-overlay"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Premier typed overlays: encrypted personal and team files mounted over a branch, with a push guard that keeps them out of public history"
+repository.workspace = true
+homepage.workspace = true
+rust-version.workspace = true
+readme = "../../README.md"
+keywords = ["overlay", "git", "vcs", "encryption", "security"]
+categories = ["development-tools", "cryptography"]
+
+[dependencies]
+aes-gcm.workspace = true
+base64.workspace = true
+globset.workspace = true
+hex.workspace = true
+rand.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+sha2.workspace = true
+premier-core.workspace = true
+premier-policy.workspace = true
+thiserror.workspace = true
+zeroize.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+
+[lints]
+workspace = true

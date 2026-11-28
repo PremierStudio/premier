@@ -1,0 +1,62 @@
+# Hardened systemd unit for running Premier directly on a Linux host (no Docker).
+# See docs/ssh-and-deploy.md ("Run under systemd") for the one-time host setup.
+#
+#   sudo install -m 0755 premier /usr/local/bin/premier
+#   sudo install -m 0644 deploy/premier.service /etc/systemd/system/premier.service
+#   sudo systemctl daemon-reload && sudo systemctl enable --now premier
+[Unit]
+Description=Premier control plane (projected Git, secret broker, agent sandbox)
+Documentation=https://github.com/PremierStudio/premier/blob/main/docs/ssh-and-deploy.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=premier
+Group=premier
+# Default repository (must be a Git repository owned by `premier`); repositories created in the
+# Studio go to PREMIER_REPOS_DIR. Server state (accounts, vault, keys, audit log, SQLite control
+# plane) lives in /var/lib/premier, which systemd creates for the service (StateDirectory).
+WorkingDirectory=/srv/premier/repo
+StateDirectory=premier
+StateDirectoryMode=0700
+Environment=PREMIER_STATE_DIR=/var/lib/premier
+Environment=PREMIER_REPOS_DIR=/srv/premier/repos
+Environment=PREMIER_STATIC_UI_DIR=/opt/premier/ui
+# Secrets and overrides (PREMIER_KMS_URI, PREMIER_TRUSTED_PROXIES, PREMIER_SSH_BIND, ...).
+# The leading "-" makes the file optional. Keep it root:premier 0640.
+EnvironmentFile=-/etc/premier/premier.env
+# Bind loopback and put a TLS reverse proxy (Caddy, nginx) in front. `--log-format json` emits one
+# structured JSON log line per event for journald / log shippers.
+ExecStart=/usr/local/bin/premier serve --bind 127.0.0.1:7420 --log-format json
+Restart=on-failure
+RestartSec=3s
+TimeoutStopSec=30s
+LimitNOFILE=65536
+
+# Sandboxing. Do NOT add RestrictNamespaces=, ProtectProc=, ProcSubset=, or a SystemCallFilter that
+# blocks unshare/clone: the bubblewrap agent sandbox builds its user namespace and a fresh /proc.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+# Own the service cgroup so agent sessions can set Linux cgroup v2 resource caps.
+Delegate=yes
+ProtectClock=true
+ProtectHostname=true
+LockPersonality=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+CapabilityBoundingSet=
+AmbientCapabilities=
+UMask=0077
+# Everything else is read-only. Add paths here if you keep repositories elsewhere.
+ReadWritePaths=/srv/premier
+
+[Install]
+WantedBy=multi-user.target

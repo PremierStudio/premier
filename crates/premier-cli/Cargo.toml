@@ -1,0 +1,50 @@
+[package]
+name = "premier-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "The premier command: serve, policy, secrets, overlays, agent sessions, MCP and GitHub Companion for Premier"
+repository.workspace = true
+homepage.workspace = true
+rust-version.workspace = true
+readme = "../../README.md"
+keywords = ["git", "vcs", "cli", "secrets", "ai-agents"]
+categories = ["command-line-utilities", "development-tools"]
+
+# cargo-binstall: fetch the release archive instead of compiling. Names match release.yml.
+[package.metadata.binstall]
+pkg-url = "{ repo }/releases/download/v{ version }/premier-v{ version }-{ target }.{ archive-format }"
+bin-dir = "premier-v{ version }-{ target }/{ bin }{ binary-ext }"
+pkg-fmt = "tgz"
+
+[package.metadata.binstall.overrides.x86_64-pc-windows-msvc]
+pkg-fmt = "zip"
+
+[[bin]]
+name = "premier"
+path = "src/main.rs"
+
+[dependencies]
+age.workspace = true
+anyhow.workspace = true
+clap.workspace = true
+serde_json.workspace = true
+premier-core.workspace = true
+premier-git-bridge.workspace = true
+premier-overlay.workspace = true
+premier-policy.workspace = true
+premier-proxy.workspace = true
+premier-secrets.workspace = true
+premier-server.workspace = true
+premier-trace.workspace = true
+tokio.workspace = true
+toml.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+zeroize.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+
+[lints]
+workspace = true

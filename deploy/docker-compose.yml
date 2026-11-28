@@ -1,0 +1,91 @@
+# Premier 1-command HTTPS deployment (Premier control plane + Caddy automatic TLS).
+#
+# Quick start:
+#   sudo mkdir -p /srv/premier/repo /srv/premier/repos /srv/premier/state
+#   sudo git init -b main /srv/premier/repo
+#   sudo chown -R 10001:10001 /srv/premier/repo /srv/premier/repos /srv/premier/state
+#   PREMIER_DOMAIN=git.example.com docker compose -f deploy/docker-compose.yml up -d
+#
+# To also enable the optional Git-over-SSH listener (port 2222), include the SSH override:
+#   PREMIER_DOMAIN=git.example.com \
+#     docker compose -f deploy/docker-compose.yml -f deploy/docker-compose.ssh.yml up -d
+#
+# If 172.28.0.0/24 collides with an existing network, override PREMIER_SUBNET,
+# PREMIER_CADDY_IP, PREMIER_APP_IP, and PREMIER_TRUSTED_PROXIES together.
+#
+# See docs/ssh-and-deploy.md for full setup, trusted-proxy, bubblewrap, and SSH details.
+
+services:
+  premier:
+    # Published multi-arch image. To build this checkout instead, replace the
+    # image line with:
+    #   build: ..
+    image: ${PREMIER_IMAGE:-ghcr.io/premierstudio/premier:latest}
+    restart: unless-stopped
+    user: "10001:10001"
+    environment:
+      PREMIER_STATE_DIR: /var/lib/premier
+      PREMIER_REPOS_DIR: /srv/repos
+      # Caddy's fixed IP on the internal Compose network so Premier trusts its
+      # X-Forwarded-For, X-Forwarded-Proto, and X-Forwarded-Host headers.
+      PREMIER_TRUSTED_PROXIES: ${PREMIER_TRUSTED_PROXIES:-172.28.0.2}
+      # Optional Git-over-SSH listener (empty disables SSH; use deploy/docker-compose.ssh.yml
+      # or set PREMIER_SSH_BIND=0.0.0.0:2222 and publish port 2222 to enable).
+      PREMIER_SSH_BIND: ${PREMIER_SSH_BIND:-}
+      # Clone URL shown in the Studio, e.g. ssh://git@git.example.com:2222 (optional).
+      PREMIER_SSH_PUBLIC_URL: ${PREMIER_SSH_PUBLIC_URL:-}
+    expose:
+      - "7420"
+      - "2222"
+    volumes:
+      - ${PREMIER_DATA_DIR:-/srv/premier}/repo:/srv/repo
+      - ${PREMIER_DATA_DIR:-/srv/premier}/repos:/srv/repos
+      - ${PREMIER_DATA_DIR:-/srv/premier}/state:/var/lib/premier
+    # Required for Linux bubblewrap agent-session sandboxing while keeping the server
+    # unprivileged (uid/gid 10001). Remove both if you do not use agent sessions.
+    security_opt:
+      - seccomp=unconfined
+      - systempaths=unconfined
+    # /readyz includes the database and git checks, so Caddy's
+    # depends_on: condition: service_healthy waits for a ready control plane.
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:7420/readyz"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+    networks:
+      premier_net:
+        ipv4_address: ${PREMIER_APP_IP:-172.28.0.3}
+
+  caddy:
+    # Explicit Caddy 2.x Alpine release (2.11). caddy:2-alpine floats on every 2.x tag.
+    image: caddy:2.11-alpine
+    restart: unless-stopped
+    depends_on:
+      premier:
+        condition: service_healthy
+    environment:
+      PREMIER_DOMAIN: ${PREMIER_DOMAIN:-localhost}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      premier_net:
+        ipv4_address: ${PREMIER_CADDY_IP:-172.28.0.2}
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  premier_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${PREMIER_SUBNET:-172.28.0.0/24}
