@@ -25,14 +25,24 @@ jobs:
           persist-credentials: false
       # rust-toolchain.toml pins `stable` + rustfmt + clippy; the workspace needs >= 1.89.
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@39008827e6b4319a349e9a42dfc90579dd25f1ca # stable
-        with:
-          components: rustfmt, clippy
+        run: |
+          rustup toolchain install stable --profile minimal --component rustfmt --component clippy
+          rustup default stable
       - name: Install bubblewrap (agent-sandbox tests)
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends bubblewrap git
       - name: Git identity (tests commit into temp repositories)
         run: git config --global user.name ci && git config --global user.email ci@example.invalid
-      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+      - name: Cache Cargo dependencies
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
       - run: cargo fmt --all -- --check
       - run: cargo clippy --workspace --all-targets -- -D warnings
       - run: cargo test --workspace
@@ -51,14 +61,25 @@ jobs:
         with:
           persist-credentials: false
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@39008827e6b4319a349e9a42dfc90579dd25f1ca # stable
-        with:
-          components: clippy
+        shell: bash
+        run: |
+          rustup toolchain install stable --profile minimal --component clippy
+          rustup default stable
       - name: Git identity (tests commit into temp repositories)
         run: |
           git config --global user.name ci
           git config --global user.email ci@example.invalid
-      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+      - name: Cache Cargo dependencies
+        uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5.1.0
+        with:
+          path: |
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
       - run: cargo clippy --workspace --all-targets -- -D warnings
       - run: cargo test -p premier-core -p premier-policy -p premier-secrets -p premier-overlay -p premier-trace -p premier-proxy -p premier-cli
 
@@ -74,14 +95,19 @@ jobs:
           persist-credentials: false
       # pnpm 10: reads apps/web/pnpm-lock.yaml (lockfileVersion 9.0). pnpm 9 rejects
       # apps/web/pnpm-workspace.yaml ("packages field missing or empty").
-      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
-        with:
-          version: 10
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
-          cache: pnpm
-          cache-dependency-path: apps/web/pnpm-lock.yaml
+          package-manager-cache: false
+      - name: Install pnpm
+        run: |
+          set -euo pipefail
+          tmpdir="$(mktemp -d)"
+          trap 'rm -rf "$tmpdir"' EXIT
+          curl -fsSL --retry 3 -o "$tmpdir/pnpm" \
+            "https://github.com/pnpm/pnpm/releases/download/v10.33.0/pnpm-linux-x64"
+          echo "8d4e8f7d778e8ac482022e2577011706a872542f6f6f233e795a4d9f978ea8b5  $tmpdir/pnpm" | sha256sum -c -
+          sudo install -m 0755 "$tmpdir/pnpm" /usr/local/bin/pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
       - run: pnpm test:all

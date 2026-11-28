@@ -28,18 +28,28 @@ jobs:
         with:
           persist-credentials: false
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@39008827e6b4319a349e9a42dfc90579dd25f1ca # stable
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+      - name: Install and verify cargo-deny and cargo-audit
+        run: |
+          set -euo pipefail
+          tmpdir="$(mktemp -d)"
+          trap 'rm -rf "$tmpdir"' EXIT
+          curl -fsSL --retry 3 -o "$tmpdir/cargo-deny.tar.gz" \
+            "https://github.com/EmbarkStudios/cargo-deny/releases/download/0.22.2/cargo-deny-0.22.2-x86_64-unknown-linux-musl.tar.gz"
+          echo "9f831cfb5d03a5093c0810091a7bd3b5e4724a1288cbe5718d8ce8cef2590adf  $tmpdir/cargo-deny.tar.gz" | sha256sum -c -
+          tar -xzf "$tmpdir/cargo-deny.tar.gz" -C "$tmpdir"
+          install -m 0755 "$tmpdir/cargo-deny-0.22.2-x86_64-unknown-linux-musl/cargo-deny" "$HOME/.cargo/bin/cargo-deny"
+
+          curl -fsSL --retry 3 -o "$tmpdir/cargo-audit.tgz" \
+            "https://github.com/rustsec/rustsec/releases/download/cargo-audit/v0.23.0/cargo-audit-x86_64-unknown-linux-musl-v0.23.0.tgz"
+          echo "4f01c74ed84b2dffd0b1d37012a62cdf2a92c96e25bdf8eec7fcc0d4d3eb7811  $tmpdir/cargo-audit.tgz" | sha256sum -c -
+          tar -xzf "$tmpdir/cargo-audit.tgz" -C "$tmpdir"
+          install -m 0755 "$tmpdir/cargo-audit-x86_64-unknown-linux-musl-v0.23.0/cargo-audit" "$HOME/.cargo/bin/cargo-audit"
       # deny.toml is the policy: licenses, bans, sources, yanked crates, advisories.
       - name: cargo-deny
-        uses: EmbarkStudios/cargo-deny-action@bb119f768ea239e765aeaef5769558d4f21213aa # v2.1.5
-        with:
-          command: check
-          arguments: --all-features
-          manifest-path: ./Cargo.toml
-      - name: Install cargo-audit
-        uses: taiki-e/install-action@073e1fd0bc889c9aee68dbaaa927cde1b5653a83 # v2.90.11
-        with:
-          tool: cargo-audit
+        run: cargo deny check --all-features --manifest-path ./Cargo.toml
       - name: cargo-audit
         run: cargo audit
 
@@ -51,14 +61,19 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
-        with:
-          version: 10
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
-          cache: pnpm
-          cache-dependency-path: apps/web/pnpm-lock.yaml
+          package-manager-cache: false
+      - name: Install pnpm
+        run: |
+          set -euo pipefail
+          tmpdir="$(mktemp -d)"
+          trap 'rm -rf "$tmpdir"' EXIT
+          curl -fsSL --retry 3 -o "$tmpdir/pnpm" \
+            "https://github.com/pnpm/pnpm/releases/download/v10.33.0/pnpm-linux-x64"
+          echo "8d4e8f7d778e8ac482022e2577011706a872542f6f6f233e795a4d9f978ea8b5  $tmpdir/pnpm" | sha256sum -c -
+          sudo install -m 0755 "$tmpdir/pnpm" /usr/local/bin/pnpm
       # Frozen install so the audit reads the committed lockfile and cannot rewrite it.
       - name: Install Studio dependencies
         working-directory: apps/web
@@ -134,11 +149,14 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      # advanced-security uploads SARIF and does not fail the job. Offline mode
-      # still lints workflow files and returns non-zero when it finds issues.
-      - name: Run zizmor
-        uses: zizmorcore/zizmor-action@1b4550e929643b8b26a62303c6bd64814271a4f1 # v0.9.2
-        with:
-          advanced-security: false
-          online-audits: false
-          version: "1.33.1"
+      - name: Install and run zizmor
+        run: |
+          set -euo pipefail
+          tmpdir="$(mktemp -d)"
+          trap 'rm -rf "$tmpdir"' EXIT
+          curl -fsSL --retry 3 -o "$tmpdir/zizmor.tar.gz" \
+            "https://github.com/zizmorcore/zizmor/releases/download/v1.33.1/zizmor-x86_64-unknown-linux-gnu.tar.gz"
+          echo "3e6a301c7a820a2501915f5a9de8c0486da82bdec7965f068477538a98743d43  $tmpdir/zizmor.tar.gz" | sha256sum -c -
+          tar -xzf "$tmpdir/zizmor.tar.gz" -C "$tmpdir"
+          chmod +x "$tmpdir/zizmor"
+          "$tmpdir/zizmor" --offline .github/workflows
